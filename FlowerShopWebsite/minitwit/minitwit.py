@@ -322,4 +322,4 @@ app.jinja_env.filters['gravatar'] = gravatar_url
 
 if __name__ == '__main__':
     init_db()
-    app.run('127.0.0.1', debug=True, port=5000, ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))
+    app.run(host='0.0.0.0', debug=False, port=443,  ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))
