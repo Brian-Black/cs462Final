@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}
+  Foursquare
+{% endblock %}
+{% block body %}
+  <h2>{{ self.title() }}</h2>
+  Here are your most recent checkins, with the most recent being at the top.
+  <ul class=messages>
+      {% for checkin in listOfCheckins %}
+      <li><strong>Venue:</strong> {{ checkin['venue']['name'] }}<br>
+      <strong>Address:</strong> {{ checkin['venue']['location']['address'] }}<br>
+      <strong>Shout:</strong> {{ checkin['shout'] }} <br> 
+      {% endfor %}
+  </ul>
+{% endblock %}
