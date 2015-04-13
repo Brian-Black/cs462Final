@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import render_template
 from flask.ext.cors import CORS
+import uuid
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -15,7 +16,8 @@ def hello(name=None):
 
 @app.route('/delivery/')
 def delivery():
-    return render_template('delivery.html')
+	orderID = uuid.uuid1()
+    return render_template('delivery.html', orderID = orderID)
 
 if __name__ == "__main__":
 	app.debug = True

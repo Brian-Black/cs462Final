@@ -6,10 +6,16 @@
 	</head>
 	<body>
 		<form method="post" action="http://localhost:5000/deliveryReady">
+			<input type="hidden" name="orderID" value="{% if orderID %} {{ orderID }} {% endif %}">
+			<label for="orderInput">Order:</label>
+		    <input type="text" id="orderInput" name="order" value="">
+		    <label for="addressInput">Shipping Address:</label>
+		    <input type="text" id="addressInput" name="address" value="">
+			<label for="costInput">Total Cost:</label>
+		    <input type="text" id="costInput" name="cost" value="">
 			<input type="hidden" name="shopID" value="1">
-		    <input type="submit" value="Delivery Ready">
+		    <input type="submit" value="Add Order">
 		</form>
-		<div id="result">hi</div>
 
 		<script type="text/javascript">
 			$(document).ready(function() {

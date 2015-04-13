@@ -17,11 +17,17 @@ def hello():
 def deliveryReady():
     error = None
     if request.method == 'POST':
+		type = 'deliveryReady'
         shopID = request.form['shopID'];
+		orderID = request.form['orderID'];
+		order = request.form['order'];
+		address = request.form['address'];
+		cost = request.form['cost'];
 
         print 'Publishing Event for deliveryReady'
-        eventInfo = {'shopID': shopID}
-        pub.sendMessage('shop.'+shopID, arg1=eventInfo, arg2=shopID)
+		topic = 'shop.'+shopID
+		eventInfo = {'type': type, 'topic': topic, shopID': shopID, 'orderID': orderID, 'order': shopID, 'address': shopID, 'cost': shopID}
+        pub.sendMessage(topic, arg1=eventInfo, arg2=shopID)
 
         return json.dumps({'success': True})
     else:
