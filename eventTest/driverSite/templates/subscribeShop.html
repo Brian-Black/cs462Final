@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Subscribe to Shop</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	</head>
+	<body>
+		<form method="post" action="http://localhost:5000/subscribeShop">
+		  <label for="shopIDinput">Shop ID:</label>
+		  <input type="text" id="shopIDinput" name="shopID" value="{% if shopID %} {{ shopID }} {% endif %}">
+		  <label for="handlerURL">Event Handler URL:</label>
+		  <input type="text" id="handlerURL" name="handlerURL" value="http://localhost:5002/subscribeShop/">
+		  <input type="submit" value="Subscribe">
+		</form>
+		<div id="result"></div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+			   var $form = $('form');
+               $form.submit(function() {
+                $.post($(this).attr('action'), $(this).serialize(), function(response) {
+                    console.log(response);
+                    var result = $.parseJSON(response);
+                    if (result.success) {
+                        $('#result').text("Event successfully received");
+                    }
+                    else {
+                        $('#result').text("Event was not received. "+result.error);
+                    }
+                });
+                return false;
+               });
+            });
+		</script>
+	</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Delivery Page</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	</head>
+	<body>
+		<form method="post" action="http://localhost:5000/deliveryReady">
+			<input type="hidden" name="shopID" value="1">
+		    <input type="submit" value="Delivery Ready">
+		</form>
+		<div id="result">hi</div>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+			   var $form = $('form');
+			   $form.submit(function() {
+                $.post($(this).attr('action'), $(this).serialize(), function(response) {
+                    console.log(response);
+                    var result = $.parseJSON(response);
+                    if (result.success) {
+                    	$('#result').text("Event successfully received");
+                    }
+                    else {
+                    	$('#result').text("Event was not received. "+result.error);
+                    }
+                });
+                return false;
+			   });
+			});
+		</script>
+	</body>
+</html>
