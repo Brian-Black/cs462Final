@@ -13,20 +13,17 @@ def hello():
 @app.route('/subscribeShop/<shopID>')
 def subscribeShop(shopID=None):
     return render_template('subscribeShop.html', shopID=shopID)
-	
-@app.Route('/processEvent/')
+
+@app.route('/processEvent/')
 def processEvent():
-	if request.method == 'POST':
-		type = request.form['type']
-		switch(type):
-			case ('deliveryReady'):
-				shopID = request.form['shopID'];
-				orderID = request.form['orderID'];
-				order = request.form['order'];
-				address = request.form['address'];
-				cost = request.form['cost']; 
-				# add all these to the database for the driver site
-				# so they can be displayed on the "available deliveries" page
+    if request.method == 'POST':
+        eventType = request.form['eventType']
+        form = request.form['form']
+        print form;
+        if(eventType == 'deliveryReady'):
+            print 'done'
+            # add all these to the database for the driver site
+            # so they can be displayed on the "available deliveries" page
 
 if __name__ == "__main__":
     app.debug = True

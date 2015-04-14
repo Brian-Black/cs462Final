@@ -16,9 +16,9 @@ def hello(name=None):
 
 @app.route('/delivery/')
 def delivery():
-	orderID = uuid.uuid1()
+    orderID = uuid.uuid1()
     return render_template('delivery.html', orderID = orderID)
 
 if __name__ == "__main__":
-	app.debug = True
-	app.run(port=5001)
+    app.debug = True
+    app.run(port=5001)
