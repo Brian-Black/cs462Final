@@ -5,8 +5,10 @@
 {% block body %}
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <h2>{{ self.title() }}</h2>
- <form method="post" action="http://localhost:5000/deliveryReady">
+ <form method="post" action="https://127.0.0.1:5000/deliveryReady">
+ <!--
 			<input type="hidden" name="orderID" value="{% if orderID %} {{ orderID }} {% endif %}">
+			-->
 			<label for="orderInput">Order:</label>
 		    <input type="text" id="orderInput" name="order" value="">
 		    <br>
@@ -19,7 +21,9 @@
 		    <input type="text" id="costInput" name="cost" value="">
 		    <br>
 		    
+			<!-- 
 			<input type="hidden" name="shopID" value="1">
+			-->
 		    <input type="submit" value="Add Order">
 		</form>
 

@@ -36,6 +36,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
 
+#GROUP PROJECT
+order_id = 0
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -66,6 +68,7 @@ def init_db():
             except sqlite3.OperationalError, msg:
                 print msg
         db.commit()
+
 
 
 def query_db(query, args=(), one=False):
@@ -104,18 +107,53 @@ def add_new_delivery_order():
 	if not g.user:
 		return redirect(url_for('public_timeline'))
 	return render_template('add_new_delivery_order.html')
+
+@app.route('/deliveryReady', methods=['POST'])
+def deliveryReady():
+	if not g.user:
+		return redirect(url_for('public_timeline'))
+		
+	#Extract user's form-submitted data
+	cost = request.form['cost']
+	order = request.form['order']
+	address = request.form['address']
+	global order_id
+	orderNumber = order_id
+	order_id += 1
+	shopID = 1
 	
+	#insert new order into database
+	db = get_db()
+	db.execute('insert into deliveries_waiting_for_bids (order_id, flower_order, shipping_address, total_cost) values (?, ?, ?, ?)', 
+		[orderNumber, order, address, cost])
+	db.commit()
+	
+	#send order to the guild thing
+	payload = {'cost': cost, 'order': order, 'address': address, 'orderID': orderNumber, 'shopID': shopID}
+	#r = requests.post("https://127.0.0.1:5000/blahblahblah", data=payload)
+	return redirect(url_for('add_new_delivery_order'), code=302)
+	
+@app.route('/blahblahblah', methods=['POST'])
+def blahblahblah():
+	return "blah blah blah!"
+
 @app.route('/deliveries_awaiting_pickup')
 def deliveries_awaiting_pickup():
 	if not g.user:
 		return redirect(url_for('public_timeline'))
-	return render_template('deliveries_awaiting_pickup.html')
+	print "hello"
+	orders=query_db('''select * from deliveries_awaiting_pickup''')
+	print orders
+	return render_template('deliveries_awaiting_pickup.html', orders=orders)
 	
 @app.route('/')
 def deliveries_in_progress():
 	if not g.user:
 		return redirect(url_for('public_timeline'))
-	return render_template('deliveries_in_progress.html')
+	print "hello"
+	orders=query_db('''select * from deliveries_in_progress''')
+	print orders
+	return render_template('deliveries_in_progress.html', orders=orders)
 	
 @app.route('/completed_deliveries')
 def completed_deliveries():
@@ -356,4 +394,4 @@ app.jinja_env.filters['gravatar'] = gravatar_url
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='127.0.0.1', debug=False, port=5000,  ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))
+    app.run(host='127.0.0.1', debug=True, port=5000,  ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))
