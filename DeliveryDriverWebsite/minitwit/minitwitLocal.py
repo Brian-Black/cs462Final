@@ -86,6 +86,7 @@ def format_datetime(timestamp):
     """Format a timestamp for display."""
     return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d @ %H:%M')
 
+
 def gravatar_url(email, size=80):
     """Return the gravatar image for the given email address."""
     return 'http://www.gravatar.com/avatar/%s?d=identicon&s=%d' % \
@@ -98,12 +99,6 @@ def before_request():
     if 'user_id' in session:
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
-
-@app.route('/add_new_delivery_order')
-def add_new_delivery_order():
-	if not g.user:
-		return redirect(url_for('public_timeline'))
-	return render_template('add_new_delivery_order.html')
 
 @app.route('/authenticated')
 def authenticated():
