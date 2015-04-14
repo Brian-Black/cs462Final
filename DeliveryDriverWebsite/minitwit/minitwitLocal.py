@@ -36,6 +36,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('MINITWIT_SETTINGS', silent=True)
 
+#GROUP PROJECT
+order_id = 0
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -68,6 +70,7 @@ def init_db():
         db.commit()
 
 
+
 def query_db(query, args=(), one=False):
     """Queries the database and returns a list of dictionaries."""
     cur = get_db().execute(query, args)
@@ -86,7 +89,6 @@ def format_datetime(timestamp):
     """Format a timestamp for display."""
     return datetime.utcfromtimestamp(timestamp).strftime('%Y-%m-%d @ %H:%M')
 
-
 def gravatar_url(email, size=80):
     """Return the gravatar image for the given email address."""
     return 'http://www.gravatar.com/avatar/%s?d=identicon&s=%d' % \
@@ -100,6 +102,76 @@ def before_request():
         g.user = query_db('select * from user where user_id = ?',
                           [session['user_id']], one=True)
 
+@app.route('/add_new_delivery_order')
+def add_new_delivery_order():
+	if not g.user:
+		return redirect(url_for('home'))
+	return render_template('add_new_delivery_order.html')
+
+@app.route('/deliveryReady', methods=['POST'])
+def deliveryReady():
+	if not g.user:
+		return redirect(url_for('home'))
+		
+	#Extract user's form-submitted data
+	cost = request.form['cost']
+	order = request.form['order']
+	address = request.form['address']
+	global order_id
+	orderNumber = order_id
+	order_id += 1
+	shopID = 1
+	
+	#insert new order into database
+	db = get_db()
+	db.execute('insert into deliveries_waiting_for_bids (order_id, flower_order, shipping_address, total_cost) values (?, ?, ?, ?)', 
+		[orderNumber, order, address, cost])
+	db.commit()
+	
+	#send order to the guild thing
+	payload = {'cost': cost, 'order': order, 'address': address, 'orderID': orderNumber, 'shopID': shopID}
+	#r = requests.post("https://127.0.0.1:5000/blahblahblah", data=payload)
+	return redirect(url_for('home'), code=302)
+	
+@app.route('/blahblahblah', methods=['POST'])
+def blahblahblah():
+	return "blah blah blah!"
+
+@app.route('/deliveries_awaiting_pickup')
+def deliveries_awaiting_pickup():
+	if not g.user:
+		return redirect(url_for('home'))
+	print "hello"
+	orders=query_db('''select * from deliveries_awaiting_pickup''')
+	print orders
+	return render_template('deliveries_awaiting_pickup.html', orders=orders)
+	
+@app.route('/deliveries_in_progress')
+def deliveries_in_progress():
+	if not g.user:
+		return redirect(url_for('home'))
+	print "hello"
+	orders=query_db('''select * from deliveries_in_progress''')
+	print orders
+	return render_template('deliveries_in_progress.html', orders=orders)
+	
+@app.route('/home')
+def home():
+	return render_template('home.html')
+	
+@app.route('/completed_deliveries')
+def completed_deliveries():
+	if not g.user:
+		return redirect(url_for('home'))
+	return render_template('completed_deliveries.html')
+
+@app.route('/deliveries_waiting_for_bids')
+def deliveries_waiting_for_bids():
+	if not g.user:
+		return redirect(url_for('home'))
+	return render_template('deliveries_waiting_for_bids.html')
+	
+	
 @app.route('/authenticated')
 def authenticated():
 	db = get_db()
@@ -119,7 +191,7 @@ def foursquare():
 	foursquare, then it will redirect you to foursquare.
 	"""
 	if not g.user:
-		return redirect(url_for('public_timeline'))
+		return redirect(url_for('home'))
 	result = query_db('select access_token_text from access_token where user_id = ?',
                           [session['user_id']], one=True)
 	if not result:
@@ -139,8 +211,9 @@ def timeline():
 	redirect to the public timeline.  This timeline shows the user's
 	messages as well as all the messages of followed users.
 	"""
+	return redirect(url_for('home'))
 	if not g.user:
-		return redirect(url_for('public_timeline'))
+		return redirect(url_for('home'))
 	#Get info from foursquare
 	result = query_db('select access_token_text from access_token where user_id = ?',
                           [session['user_id']], one=True)
@@ -260,7 +333,7 @@ def add_message():
 def login():
     """Logs the user in."""
     if g.user:
-        return redirect(url_for('timeline'))
+        return redirect(url_for('home'))
     error = None
     if request.method == 'POST':
         user = query_db('''select * from user where
@@ -273,7 +346,7 @@ def login():
         else:
             flash('You were logged in')
             session['user_id'] = user['user_id']
-            return redirect(url_for('timeline'))
+            return redirect(url_for('home'))
     return render_template('login.html', error=error)
 
 
@@ -281,7 +354,7 @@ def login():
 def register():
     """Registers the user."""
     if g.user:
-        return redirect(url_for('timeline'))
+        return redirect(url_for('home'))
     error = None
     if request.method == 'POST':
         if not request.form['username']:
@@ -316,7 +389,7 @@ def logout():
     """Logs the user out."""
     flash('You were logged out')
     session.pop('user_id', None)
-    return redirect(url_for('public_timeline'))
+    return redirect(url_for('home'))
 
 
 # add some filters to jinja
@@ -326,4 +399,4 @@ app.jinja_env.filters['gravatar'] = gravatar_url
 
 if __name__ == '__main__':
     init_db()
-    app.run(host='127.0.0.1', debug=False, port=5000,  ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))
+    app.run(host='127.0.0.1', debug=True, port=5001,  ssl_context=('/Users/lexi/Development/Certificates/server.crt', '/Users/lexi/Development/Certificates/server.key'))

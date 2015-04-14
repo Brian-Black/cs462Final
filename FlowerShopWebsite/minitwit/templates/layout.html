@@ -5,7 +5,7 @@
   <h1>Flower Shop</h1>
   <div class=navigation>
   {% if g.user %}
-    <a href="{{ url_for('timeline') }}">my timeline</a> |
+    <a href="{{ url_for('timeline') }}">home</a> |
     <a href="{{ url_for('add_new_delivery_order') }}">Add</a> |
     <a href="{{ url_for('deliveries_awaiting_pickup') }}">Pickup List</a> |
     <a href="{{ url_for('deliveries_in_progress') }}">Deliver List</a> |

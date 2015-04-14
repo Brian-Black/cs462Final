@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}
+  Add New Delivery Order
+{% endblock %}
+{% block body %}
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <h2>{{ self.title() }}</h2>
+ <form method="post" action="https://127.0.0.1:5000/deliveryReady">
+ <!--
+			<input type="hidden" name="orderID" value="{% if orderID %} {{ orderID }} {% endif %}">
+			-->
+			<label for="orderInput">Order:</label>
+		    <input type="text" id="orderInput" name="order" value="">
+		    <br>
+		    
+		    <label for="addressInput">Shipping Address:</label>
+		    <input type="text" id="addressInput" name="address" value="">
+		    <br>
+		    
+			<label for="costInput">Total Cost:</label>
+		    <input type="text" id="costInput" name="cost" value="">
+		    <br>
+		    
+			<!-- 
+			<input type="hidden" name="shopID" value="1">
+			-->
+		    <input type="submit" value="Add Order">
+		</form>
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+			   var $form = $('form');
+			   $form.submit(function() {
+                $.post($(this).attr('action'), $(this).serialize(), function(response) {
+                    console.log(response);
+                    var result = $.parseJSON(response);
+                    if (result.success) {
+                    	$('#result').text("Event successfully received");
+                    }
+                    else {
+                    	$('#result').text("Event was not received. "+result.error);
+                    }
+                });
+                return false;
+			   });
+			});
+		</script>
+{% endblock %}

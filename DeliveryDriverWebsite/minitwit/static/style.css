@@ -1,5 +1,5 @@
 body {
-    background: #CAECE9;
+    background: #FFE6B4;
     font-family: 'Trebuchet MS', sans-serif;
     font-size: 14px;
 }
@@ -38,23 +38,23 @@ input[type="submit"] {
 
 div.page {
     background: white;
-    border: 1px solid #6ECCC4;
+    border: 1px solid #FDBD49;
     width: 700px;
     margin: 30px auto;
 }
 
 div.page h1 {
-    background: #6ECCC4;
+    background: #FDBD49;
     margin: 0;
     padding: 10px 14px;
     color: white;
     letter-spacing: 1px;
-    text-shadow: 0 0 3px #24776F;
+    text-shadow: 0 0 3px #775624;
     font-weight: normal;
 }
 
 div.page div.navigation {
-    background: #DEE9E8;
+    background: #E9E6DE;
     padding: 4px 10px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #eee;
@@ -70,7 +70,7 @@ div.page div.navigation a {
 
 div.page h2 {
     margin: 0 0 15px 0;
-    color: #105751;
+    color: #FC7C00;
     text-shadow: 0 1px 2px #ccc;
 }
 
@@ -103,8 +103,8 @@ div.page ul.messages {
 div.page ul.messages li {
     margin: 10px 0;
     padding: 5px;
-    background: #F0FAF9;
-    border: 1px solid #DBF3F1;
+    background: #FAF8F0;
+    border: 1px solid #EDE4D7;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     min-height: 48px;
