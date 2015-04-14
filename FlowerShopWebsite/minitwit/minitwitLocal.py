@@ -110,7 +110,26 @@ def deliveries_awaiting_pickup():
 	if not g.user:
 		return redirect(url_for('public_timeline'))
 	return render_template('deliveries_awaiting_pickup.html')
+	
+@app.route('/')
+def deliveries_in_progress():
+	if not g.user:
+		return redirect(url_for('public_timeline'))
+	return render_template('deliveries_in_progress.html')
+	
+@app.route('/completed_deliveries')
+def completed_deliveries():
+	if not g.user:
+		return redirect(url_for('public_timeline'))
+	return render_template('completed_deliveries.html')
 
+@app.route('/deliveries_waiting_for_bids')
+def deliveries_waiting_for_bids():
+	if not g.user:
+		return redirect(url_for('public_timeline'))
+	return render_template('deliveries_waiting_for_bids.html')
+	
+	
 @app.route('/authenticated')
 def authenticated():
 	db = get_db()
