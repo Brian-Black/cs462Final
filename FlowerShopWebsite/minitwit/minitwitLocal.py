@@ -104,6 +104,12 @@ def add_new_delivery_order():
 	if not g.user:
 		return redirect(url_for('public_timeline'))
 	return render_template('add_new_delivery_order.html')
+	
+@app.route('/deliveries_awaiting_pickup')
+def deliveries_awaiting_pickup():
+	if not g.user:
+		return redirect(url_for('public_timeline'))
+	return render_template('deliveries_awaiting_pickup.html')
 
 @app.route('/authenticated')
 def authenticated():
